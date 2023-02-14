@@ -64,5 +64,6 @@ for gomod in $( find "$REPO_DIR" -name "go.mod" | grep -v "/examples/" | sort );
     IFS=$OFS
 
     go mod tidy -compat=1.19
-bre
+
+    popd >/dev/null
 done
