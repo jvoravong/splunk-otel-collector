@@ -187,7 +187,7 @@ exporters:
     api_url: https://api.${SPLUNK_REALM}.signalfx.com
     ingest_url: https://ingest.${SPLUNK_REALM}.signalfx.com
   logging:
-    logLevel: debug
+    loglevel: debug
 service:
   extensions:
   - health_check

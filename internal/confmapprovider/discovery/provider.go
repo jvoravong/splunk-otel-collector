@@ -65,13 +65,13 @@ type mapProvider struct {
 func New() (Provider, error) {
 	m := &mapProvider{configs: map[string]*Config{}}
 	zapConfig := zap.NewProductionConfig()
-	logLevel := zap.WarnLevel
+	loglevel := zap.WarnLevel
 	if ll, ok := os.LookupEnv(logLevelEnvVar); ok {
 		if l, err := zapcore.ParseLevel(ll); err == nil {
-			logLevel = l
+			loglevel = l
 		}
 	}
-	zapConfig.Level = zap.NewAtomicLevelAt(logLevel)
+	zapConfig.Level = zap.NewAtomicLevelAt(loglevel)
 	var err error
 	if m.logger, err = zapConfig.Build(); err != nil {
 		return (*mapProvider)(nil), err
