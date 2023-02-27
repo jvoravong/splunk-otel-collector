@@ -2,16 +2,10 @@
 
 set -euxo pipefail
 
-SMART_AGENT_RELEASE="${SMART_AGENT_RELEASE:-}"
 OUTPUT_DIR="${OUTPUT_DIR:-}"
 VERSION="${VERSION:-}"
 
 if [ $# -eq 0 ]; then
-    if [ -z "$SMART_AGENT_RELEASE" ]; then
-        echo "SMART_AGENT_RELEASE env var not set!" >&2
-        exit 1
-    fi
-
     if [ -z "$OUTPUT_DIR" ]; then
         echo "OUTPUT_DIR env var not set!" >&2
         exit 1
@@ -22,7 +16,7 @@ if [ $# -eq 0 ]; then
         exit 1
     fi
 
-    buildargs="--output /work/build/stage --smart-agent ${SMART_AGENT_RELEASE#v} ${VERSION#v}"
+    buildargs="--output /work/build/stage ${VERSION#v}"
     /project/internal/buildscripts/packaging/msi/msi-builder/build.sh $buildargs
     mkdir -p $OUTPUT_DIR
     echo "Copying MSI to $OUTPUT_DIR"

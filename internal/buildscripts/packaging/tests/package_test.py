@@ -42,13 +42,18 @@ AGENT_CONFIG_PATH = "/etc/otel/collector/agent_config.yaml"
 GATEWAY_CONFIG_PATH = "/etc/otel/collector/gateway_config.yaml"
 BUNDLE_DIR = "/usr/lib/splunk-otel-collector/agent-bundle"
 
-def get_package(distro, name, path):
+def get_package(distro, name, path, arch):
+    pkg_paths = []
     if distro in DEB_DISTROS:
-        pkg_paths = glob.glob(str(path / f"{name}*amd64.deb"))
+        pkg_paths = glob.glob(str(path / f"{name}*{arch}.deb"))
     elif distro in RPM_DISTROS:
-        pkg_paths = glob.glob(str(path / f"{name}*x86_64.rpm"))
+        if arch == "amd64":
+            arch = "x86_64"
+        elif arch == "arm64":
+            arch = "aarch64"
+        pkg_paths = glob.glob(str(path / f"{name}*{arch}.rpm"))
     elif distro in TAR_DISTROS:
-        pkg_paths = glob.glob(str(path / f"{name}*amd64.tar.gz"))
+        pkg_paths = glob.glob(str(path / f"{name}*{arch}.tar.gz"))
 
     if pkg_paths:
         return sorted(pkg_paths)[-1]
@@ -68,33 +73,40 @@ def get_libcap_command(container):
     "distro",
     [pytest.param(distro, marks=pytest.mark.tar) for distro in TAR_DISTROS]
 )
-def test_tar_collector_package_install(distro):
-    pkg_path = get_package(distro, PKG_NAME, PKG_DIR)
-    assert pkg_path, f"{PKG_NAME} package not found in {PKG_DIR}"
+@pytest.mark.parametrize("arch", ["amd64", "arm64"])
+def test_tar_collector_package_install(distro, arch):
+    pkg_path = get_package(distro, PKG_NAME, PKG_DIR, arch)
+    assert pkg_path, f"{PKG_NAME} {arch} package not found in {PKG_DIR}"
     pkg_base = os.path.basename(pkg_path)
 
-    with run_distro_container(distro) as container:
+    with run_distro_container(distro, arch=arch) as container:
 
         copy_file_into_container(container, pkg_path, f"/test/{pkg_base}")
         run_container_cmd(container, f"tar xzf /test/{pkg_base} -C /tmp")
-        run_container_cmd(container, f"test -d /tmp/splunk-otel-collector/bin")
-        run_container_cmd(container, f"test -d /tmp/splunk-otel-collector/agent-bundle")
-        run_container_cmd(container, f"test -f /tmp/splunk-otel-collector/bin/otelcol")
-        run_container_cmd(container, f"test -f /tmp/splunk-otel-collector/bin/translatesfx")
-        run_container_cmd(container, f"test -f /tmp/splunk-otel-collector/config/agent_config.yaml")
-        run_container_cmd(container, f"test -f /tmp/splunk-otel-collector/config/gateway_config.yaml")
+        bundle_dir = "/tmp/splunk-otel-collector"
+        run_container_cmd(container, f"{bundle_dir}/agent-bundle/bin/patch-interpreter {bundle_dir}/agent-bundle")
+        run_container_cmd(container, f"test -d {bundle_dir}/bin")
+        run_container_cmd(container, f"test -d {bundle_dir}/agent-bundle")
+        run_container_cmd(container, f"test -f {bundle_dir}/bin/otelcol")
+        run_container_cmd(container, f"test -f {bundle_dir}/bin/translatesfx")
+        run_container_cmd(container, f"test -f {bundle_dir}/config/agent_config.yaml")
+        run_container_cmd(container, f"test -f {bundle_dir}/config/gateway_config.yaml")
 
 @pytest.mark.parametrize(
     "distro",
     [pytest.param(distro, marks=pytest.mark.deb) for distro in DEB_DISTROS]
     + [pytest.param(distro, marks=pytest.mark.rpm) for distro in RPM_DISTROS],
 )
-def test_collector_package_install(distro):
-    pkg_path = get_package(distro, PKG_NAME, PKG_DIR)
-    assert pkg_path, f"{PKG_NAME} package not found in {PKG_DIR}"
+@pytest.mark.parametrize("arch", ["amd64", "arm64"])
+def test_collector_package_install(distro, arch):
+    if distro == "opensuse-12" and arch == "arm64":
+        pytest.skip("opensuse-12 arm64 no longer supported")
+
+    pkg_path = get_package(distro, PKG_NAME, PKG_DIR, arch)
+    assert pkg_path, f"{PKG_NAME} {arch} package not found in {PKG_DIR}"
     pkg_base = os.path.basename(pkg_path)
 
-    with run_distro_container(distro) as container:
+    with run_distro_container(distro, arch) as container:
         # install setcap dependency
         if distro in RPM_DISTROS:
             run_container_cmd(container, get_libcap_command(container))
@@ -103,7 +115,6 @@ def test_collector_package_install(distro):
             run_container_cmd(container, "apt-get install -y libcap2-bin")
 
         copy_file_into_container(container, pkg_path, f"/test/{pkg_base}")
-
 
         try:
             # install package
@@ -162,14 +173,18 @@ def test_collector_package_install(distro):
     [pytest.param(distro, marks=pytest.mark.deb) for distro in DEB_DISTROS]
     + [pytest.param(distro, marks=pytest.mark.rpm) for distro in RPM_DISTROS],
     )
-def test_collector_package_upgrade(distro):
+@pytest.mark.parametrize("arch", ["amd64", "arm64"])
+def test_collector_package_upgrade(distro, arch):
+    if distro == "opensuse-12" and arch == "arm64":
+        pytest.skip("opensuse-12 arm64 no longer supported")
+
     install_cmd = f"sh /test/install.sh -- testing123 --realm test --without-fluentd --collector-version 0.35.0"
 
-    pkg_path = get_package(distro, PKG_NAME, PKG_DIR)
+    pkg_path = get_package(distro, PKG_NAME, PKG_DIR, arch)
     assert pkg_path, f"{PKG_NAME} package not found in {PKG_DIR}"
     pkg_base = os.path.basename(pkg_path)
 
-    with run_distro_container(distro) as container:
+    with run_distro_container(distro, arch=arch) as container:
         copy_file_into_container(container, INSTALLER_PATH, "/test/install.sh")
 
         try:
