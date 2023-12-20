@@ -51,7 +51,11 @@ updates:
       - dependency-name: "github.com/openshift/*"
         versions: ["v3.9.0+incompatible"]
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    group:
+      k8s:
+        patterns:
+          - "*k8s*"
   - package-ecosystem: "gomod"
     directory: "/internal/tools"
     ignore:
@@ -88,7 +92,11 @@ updates:
       - dependency-name: "go.opentelemetry.io/*"
       - dependency-name: "github.com/open-telemetry/*"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    group:
+      k8s:
+        patterns:
+          - "*k8s*"
   - package-ecosystem: "gomod"
     directory: "/tests/tools"
     ignore:
