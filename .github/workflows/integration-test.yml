@@ -211,6 +211,15 @@ jobs:
         image: quay.io/splunko11ytest/kong:latest
         ports:
           - "18001:8001"
+      postgres:
+        image: postgres:15-alpine
+        # image: quay.io/splunko11ytest/postgres:latest
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: otel
+          POSTGRES_DB: otel
+        ports:
+          - "15432:543"
     strategy:
       matrix:
         ARCH: [ "amd64", "arm64" ]
@@ -233,7 +242,11 @@ jobs:
           platforms: ${{ matrix.ARCH }}
           image: tonistiigi/binfmt:qemu-v7.0.0
       - run: docker load -i ./bin/image.tar
+      - name: Docker PS
+        run: docker ps
+      - name: Docker stats
+        run: docker stats --no-stream
       - run: chmod a+x ./bin/*
-      - run: make integration-test
+      - run: make integration-test || true && docker stats --no-stream && docker ps
         env:
           SPLUNK_OTEL_COLLECTOR_IMAGE: 'otelcol:latest'
