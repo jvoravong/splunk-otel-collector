@@ -234,6 +234,23 @@ jobs:
           image: tonistiigi/binfmt:qemu-v7.0.0
       - run: docker load -i ./bin/image.tar
       - run: chmod a+x ./bin/*
-      - run: make integration-test
+      - name: Run Integration Tests and Filter Output
+        run: |
+          set -o pipefail
+          file_name="integration-test-${GITHUB_RUN_ID}-${GITHUB_ACTION}-$(date +'%Y%m%d').out"
+          make integration-test 2>&1 | tee >(awk -v file_name="$file_name" '/FAIL|error/ {print} {print > file_name}')
+          exit_status=${PIPESTATUS[0]}
+          echo "Exit status: $exit_status"
+          if [ "$exit_status" -ne 0 ]; then
+            exit $exit_status
+          fi
         env:
           SPLUNK_OTEL_COLLECTOR_IMAGE: 'otelcol:latest'
+
+      - name: Upload Test Output as Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        retention-days: 5
+        with:
+          name: integration-test-out-${{ github.run_id }}-${{ github.run_attempt }}
+          path: integration-test-*.out
