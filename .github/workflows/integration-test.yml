@@ -217,13 +217,18 @@ jobs:
         ports:
           - "15432:5432"
       redis_client:
-        image: jvsplk/postgres:latest
+        image: jvsplk/redis_client:latest
         #        image: quay.io/splunko11ytest/postgres:latest
       redis_server:
         image: jvsplk/redis_server:latest
         #        image: quay.io/splunko11ytest/redis_server:latest
         ports:
           - "6379:6379"
+      hadoop:
+        image: jvsplk/hadoop:latest
+        #        image: quay.io/splunko11ytest/hadoop:latest
+        ports:
+          - "8088:8088"
     strategy:
       matrix:
         ARCH: [ "amd64", "arm64" ]
