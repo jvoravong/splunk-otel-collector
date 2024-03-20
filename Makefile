@@ -20,7 +20,7 @@ NONROOT_MODS := $(shell find . $(FIND_MOD_ARGS) -exec $(TO_MOD_DIR) )
 GOTEST=go test -p $(NUM_CORES)
 
 # Currently integration tests are flakey when run in parallel due to internal metric and config server conflicts
-GOTEST_SERIAL=go test -p 1 -json
+GOTEST_SERIAL=go test -p 1
 
 BUILD_INFO_IMPORT_PATH=github.com/signalfx/splunk-otel-collector/internal/version
 BUILD_INFO_IMPORT_PATH_TESTS=github.com/signalfx/splunk-otel-collector/tests/internal/version

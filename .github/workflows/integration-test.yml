@@ -216,19 +216,6 @@ jobs:
         #        image: quay.io/splunko11ytest/postgres:latest
         ports:
           - "15432:5432"
-      redis_client:
-        image: jvsplk/redis_client:latest
-        #        image: quay.io/splunko11ytest/postgres:latest
-      redis_server:
-        image: jvsplk/redis_server:latest
-        #        image: quay.io/splunko11ytest/redis_server:latest
-        ports:
-          - "6379:6379"
-      hadoop:
-        image: jvsplk/hadoop:latest
-        #        image: quay.io/splunko11ytest/hadoop:latest
-        ports:
-          - "8088:8088"
     strategy:
       matrix:
         ARCH: [ "amd64", "arm64" ]
@@ -251,11 +238,7 @@ jobs:
           platforms: ${{ matrix.ARCH }}
           image: tonistiigi/binfmt:qemu-v7.0.0
       - run: docker load -i ./bin/image.tar
-      - run: docker ps
-      - run: docker stats --no-stream
       - run: chmod a+x ./bin/*
       - run: make integration-test
         env:
           SPLUNK_OTEL_COLLECTOR_IMAGE: 'otelcol:latest'
-      - run: docker ps
-      - run: docker stats --no-stream

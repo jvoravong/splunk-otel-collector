@@ -287,5 +287,5 @@ func AssertAllMetricsReceived(
 	_, shutdown := tc.SplunkOtelCollector(collectorConfigFilename, builders...)
 	defer shutdown()
 
-	require.NoError(t, tc.OTLPReceiverSink.AssertAllMetricsReceived(t, *expectedResourceMetrics, 180*time.Second))
+	require.NoError(t, tc.OTLPReceiverSink.AssertAllMetricsReceived(t, *expectedResourceMetrics, 30*time.Second))
 }
