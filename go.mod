@@ -11,7 +11,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/hashicorp/vault v1.15.6
 	github.com/hashicorp/vault-plugin-auth-gcp v0.16.2
-	github.com/hashicorp/vault/api v1.12.1
+	github.com/hashicorp/vault/api v1.13.0
 	github.com/jaegertracing/jaeger v1.55.0
 	github.com/knadh/koanf v1.5.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.96.0
@@ -175,6 +175,7 @@ require (
 	github.com/duosecurity/duo_api_golang v0.0.0-20240205144049-bb361ad4ae1c // indirect
 	github.com/expr-lang/expr v1.16.1 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
 	github.com/go-openapi/errors v0.21.1 // indirect
 	github.com/go-openapi/strfmt v0.22.2 // indirect
 	github.com/go-openapi/validate v0.23.2 // indirect
