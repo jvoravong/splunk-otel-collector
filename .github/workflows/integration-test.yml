@@ -27,10 +27,10 @@ env:
   GO_VERSION: "1.21.12"
 jobs:
   agent-bundle-linux:
-    runs-on: ${{ fromJSON('["ubuntu-20.04", "otel-arm64"]')[matrix.ARCH == 'arm64'] }}
+    runs-on: "ubuntu-20.04"
     strategy:
       matrix:
-        ARCH: [ "amd64", "arm64" ]
+        ARCH: [ "amd64" ]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        ARCH: [ "amd64", "arm64", "ppc64le" ]
+        ARCH: [ "amd64", "ppc64le" ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -102,19 +102,19 @@ jobs:
           path: ./bin
       - uses: docker/setup-qemu-action@v3
         with:
-          platforms: arm64,ppc64le
+          platforms: ppc64le
           image: tonistiigi/binfmt:qemu-v7.0.0
       - uses: docker/setup-buildx-action@v3
         id: multiarch-otelcol-builder
         with:
           driver: docker-container   # Create a builder with the docker-container driver required for multiarch builds
           driver-opts: network=host  # Required for the builder to push to the local registry service
-      - run: make docker-otelcol SKIP_COMPILE=true SKIP_BUNDLE=true ARCH=amd64,arm64,ppc64le IMAGE_NAME=localhost:5000/otelcol IMAGE_TAG=latest PUSH=true
+      - run: make docker-otelcol SKIP_COMPILE=true SKIP_BUNDLE=true ARCH=amd64,ppc64le IMAGE_NAME=localhost:5000/otelcol IMAGE_TAG=latest PUSH=true
         env:
           MULTIARCH_OTELCOL_BUILDER: ${{ steps.multiarch-otelcol-builder.outputs.name }}  # Use the builder created by the docker/setup-buildx-action step
       - name: Save image archive for each platform to be loaded by downstream jobs
         run: |
-          for arch in "amd64" "arm64" "ppc64le"; do
+          for arch in "amd64" "ppc64le"; do
             mkdir -p docker-otelcol/${arch}
             docker pull --platform=linux/${arch} localhost:5000/otelcol:latest
             docker tag localhost:5000/otelcol:latest otelcol:latest
@@ -127,10 +127,6 @@ jobs:
           path: ./docker-otelcol/amd64
       - uses: actions/upload-artifact@v4
         with:
-          name: docker-otelcol-arm64
-          path: ./docker-otelcol/arm64
-      - uses: actions/upload-artifact@v4
-        with:
           name: docker-otelcol-ppc64le
           path: ./docker-otelcol/ppc64le
 
@@ -140,7 +136,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        ARCH: [ "amd64", "arm64" ]
+        ARCH: [ "amd64"]
       fail-fast: false
     needs: [ "docker-otelcol", "otelcol" ]
     steps:
@@ -177,7 +173,7 @@ jobs:
     needs: [ "docker-otelcol", "otelcol" ]
     strategy:
       matrix:
-        ARCH: [ "amd64", "arm64" ]
+        ARCH: [ "amd64" ]
         PROFILE: [ "integration", "smartagent" ]
       fail-fast: false
     env:
@@ -337,7 +333,7 @@ jobs:
         run: |
           includes=""
           for service in "mongodb" "kafkametrics"; do
-            for arch in "amd64" "arm64"; do
+            for arch in "amd64"; do
               if [ "$service" = "mongodb" ]; then
                 for mongodb_version in "4.0" "4.4" "5.0" "6.0" "7.0"; do
                   includes="${includes},{\"SERVICE\": \"${service}\", \"ARCH\": \"${arch}\", \"MONGODB_VERSION\": \"${mongodb_version}\"}"
