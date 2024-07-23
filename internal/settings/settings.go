@@ -78,7 +78,9 @@ var DefaultAgentConfigWindows = func() string {
 	return filepath.Clean(path)
 }()
 
-var defaultFeatureGates = []string{}
+var defaultFeatureGates = []string{
+	"-confmap.strictlyTypedInput", // TODO: Remove as part of OTL-2877
+}
 
 type Settings struct {
 	discovery                *discovery.Provider
