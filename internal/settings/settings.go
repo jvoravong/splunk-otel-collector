@@ -79,7 +79,8 @@ var DefaultAgentConfigWindows = func() string {
 }()
 
 var defaultFeatureGates = []string{
-	"-confmap.strictlyTypedInput", // TODO: Remove as part of OTL-2877
+	"-confmap.strictlyTypedInput",   // TODO: Remove as part of OTL-2877
+	"-confmap.unifyEnvVarExpansion", // TODO: TEMP
 }
 
 type Settings struct {
