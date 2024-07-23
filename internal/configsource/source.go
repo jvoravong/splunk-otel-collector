@@ -55,7 +55,7 @@ var ddBackwardCompatible = func() bool {
 	if v, err := strconv.ParseBool(strings.ToLower(os.Getenv(dollarDollarCompatEnvVar))); err == nil {
 		return v
 	}
-	return true
+	return false
 }()
 
 type ConfigSource interface {
