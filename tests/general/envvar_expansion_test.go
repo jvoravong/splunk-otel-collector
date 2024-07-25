@@ -41,7 +41,7 @@ func TestExpandedDollarSignsViaStandardEnvVar(t *testing.T) {
 	)
 }
 
-func TestExpandedDollarSignsViaEnvConfigSource(t *testing.T) {
+func TestIncompatibleExpandedDollarSignsViaEnvConfigSource(t *testing.T) {
 	testutils.CheckGoldenFileWithCollectorOptions(t, "env_config_source_labels.yaml", "incompat_env_config_source_labels_expected.yaml", func(collector testutils.Collector) testutils.Collector {
 		return collector.WithEnv(map[string]string{"AN_ENVVAR": "an-envvar-value"})
 	},
