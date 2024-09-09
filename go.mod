@@ -113,7 +113,7 @@ require (
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/windowsperfcountersreceiver v0.107.1-0.20240816183440-44ef4d6c5a2c
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinreceiver v0.107.1-0.20240816183440-44ef4d6c5a2c
 	github.com/prometheus/client_model v0.6.1
-	github.com/prometheus/common v0.55.0
+	github.com/prometheus/common v0.59.1
 	github.com/prometheus/prometheus v0.54.0
 	github.com/signalfx/splunk-otel-collector/pkg/extension/smartagentextension v0.83.0
 	github.com/signalfx/splunk-otel-collector/pkg/processor/timestampprocessor v0.83.0
@@ -306,7 +306,7 @@ require (
 	github.com/pkg/sftp v1.13.6 // indirect
 	github.com/pquerna/otp v1.4.0 // indirect
 	github.com/prometheus-community/windows_exporter v0.25.1 // indirect
-	github.com/prometheus/client_golang v1.19.1 // indirect
+	github.com/prometheus/client_golang v1.20.0 // indirect
 	github.com/prometheus/common/sigv4 v0.1.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/rboyer/safeio v0.2.3 // indirect
