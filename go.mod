@@ -1,8 +1,7 @@
 module github.com/signalfx/splunk-otel-collector
 
 go 1.22.5
-
-toolchain go1.22.7
+toolchain go1.23.6
 
 require (
 	github.com/alecthomas/participle/v2 v2.1.1
@@ -122,9 +121,9 @@ require (
 	github.com/signalfx/splunk-otel-collector/pkg/receiver/smartagentreceiver v0.83.0
 	github.com/signalfx/splunk-otel-collector/tests v0.83.0
 	github.com/spf13/cast v1.7.0
-	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.9.0
-	go.etcd.io/bbolt v1.3.11
+	github.com/spf13/pflag v1.0.6
+	github.com/stretchr/testify v1.10.0
+	go.etcd.io/bbolt v1.4.0
 	go.etcd.io/etcd/client/v2 v2.305.17
 	go.opentelemetry.io/collector/component/componentstatus v0.113.0
 	go.opentelemetry.io/collector/config/confighttp v0.113.0
@@ -160,7 +159,7 @@ require (
 	go.uber.org/goleak v1.3.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/sys v0.27.0
+	golang.org/x/sys v0.29.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -645,7 +644,7 @@ require (
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/oauth2 v0.23.0 // indirect
-	golang.org/x/sync v0.9.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/term v0.25.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/time v0.7.0 // indirect
