@@ -3,7 +3,7 @@ module github.com/signalfx/splunk-otel-collector/pkg/processor/timestampprocesso
 go 1.23.10
 
 require (
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	go.opentelemetry.io/collector/component v1.36.0
 	go.opentelemetry.io/collector/confmap v1.36.0
 	go.opentelemetry.io/collector/consumer v1.36.0
