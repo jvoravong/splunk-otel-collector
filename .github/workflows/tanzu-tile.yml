@@ -51,7 +51,7 @@ jobs:
           echo "tanzu_tile_path=$tanzu_tile_path" >> "$GITHUB_ENV"
 
       - name: Uploading artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: tanzu-tile-latest.pivotal
           path: ${{ env.tanzu_tile_path }}

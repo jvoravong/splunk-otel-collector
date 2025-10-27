@@ -73,7 +73,7 @@ jobs:
         env:
           BUNDLE_CACHE_HIT: "${{ steps.bundle-cache.outputs.cache-hit }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: agent-bundle-linux-${{ matrix.ARCH }}
           path: ./dist/agent-bundle_linux_${{ matrix.ARCH }}.tar.gz
@@ -113,7 +113,7 @@ jobs:
         run: make ${{ matrix.SYS_PACKAGE }}-package SKIP_COMPILE=true SKIP_BUNDLE=true VERSION="" ARCH="${{ matrix.ARCH }}"
 
       - name: Uploading ${{ matrix.SYS_PACKAGE }} ${{ matrix.ARCH }} package artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.SYS_PACKAGE }}-${{ matrix.ARCH }}-package
           path: ./dist/splunk-otel-collector*
@@ -136,7 +136,7 @@ jobs:
 
       - run: ./packaging/bundle/scripts/windows/make.ps1 bundle
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: agent-bundle-windows-${{ matrix.OS }}
           path: ./dist/agent-bundle_windows_amd64.zip
@@ -171,7 +171,7 @@ jobs:
             "${customActionBinDir}\SplunkCustomActions.dll" `
             "${customActionBinDir}\Microsoft.Deployment.WindowsInstaller.dll" `
             "${customActionDir}\src\CustomAction.config"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: msi-custom-actions
           path: ./dist/SplunkCustomActions.CA.dll
@@ -216,7 +216,7 @@ jobs:
           mkdir -p dist
           make msi SKIP_COMPILE=true VERSION=""
       - name: Uploading msi build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: msi-build
           path: ./dist/*.msi
@@ -319,7 +319,7 @@ jobs:
 
       - run: kitchen test ${{ matrix.DISTRO }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: ${{ matrix.DISTRO }}
@@ -372,7 +372,7 @@ jobs:
         env:
           KITCHEN_YAML: kitchen.windows.yml
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: ${{ matrix.SUITE }}-${{ matrix.DISTRO }}
